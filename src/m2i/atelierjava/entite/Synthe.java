@@ -21,12 +21,17 @@ public class Synthe{
     private boolean on;
     private String instrument;
     private int volume;
+//    private Synthesizer Synthe;
+//    private MidiChannel[] channels;
+//    private Instrument[] instrus;
 
     public Synthe(boolean on, String instrument, int volume) {
         this.on = on;
         this.instrument = instrument;
         this.volume = volume;
     }
+
+    
     
     
 
@@ -75,7 +80,7 @@ public class Synthe{
             
                 this.volume++;
             } else {
-            
+                this.volume = 10;
                 System.out.println("Volume max atteint");
             }
         }
@@ -91,12 +96,11 @@ public class Synthe{
             
                 this.volume--;
             } else {
-            
-                if (this.on){
+                
+                this.volume = 0;       
+                System.out.println("Volume min atteint");
                     
-                    System.out.println("Volume min atteint");
-                    
-                }
+                
                 
             }
         }
@@ -104,7 +108,9 @@ public class Synthe{
         
     }
     
-    public void jouerNote(int sonInstrument, int sonVelocity) throws MidiUnavailableException, InterruptedException{
+    public void jouerNote(int sonInstrument1, int sonVelocity1, int sonInstrument2, 
+                        int sonVelocity2, int channel1, int channel2, int instrument1, int instrument2)
+                        throws MidiUnavailableException, InterruptedException{
         
 //        if (this.on) {
 //            System.out.println(note);
@@ -115,9 +121,18 @@ public class Synthe{
         synth1.open();
         MidiChannel[] channels = synth1.getChannels();
         Instrument[] instrus = synth1.getDefaultSoundbank().getInstruments();
-        synth1.loadInstrument(instrus[90]);
+        //synth1.loadInstrument(instrus[1]);
         
-        channels[5].noteOn(sonInstrument, sonVelocity);
+        //chargement de tous les instruments
+        synth1.loadAllInstruments(synth1.getDefaultSoundbank());
+        
+        //choix du channel et de l'intrument en mode polyphonique
+        channels[channel1].programChange(66);
+        channels[channel2].programChange(instrument2);
+        
+        channels[channel1].noteOn(sonInstrument1, sonVelocity1);
+        //channels[channel2].noteOn(sonInstrument2, sonVelocity2);
+        
         System.out.println(instrus[90].getName());
         Thread.sleep(10000);
         
